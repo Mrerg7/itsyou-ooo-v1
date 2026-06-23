@@ -1,2 +1,1 @@
-# Redirect non-www to www (root-relative only)
-/ https://itsyou.ooo/ 301
+# Static single-page site — no redirects needed

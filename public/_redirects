@@ -1,0 +1,2 @@
+# Redirect non-www to www (root-relative only)
+/ https://itsyou.ooo/ 301

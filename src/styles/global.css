@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", Georgia, serif;
+  --font-body: "Source Serif 4", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  --color-ink: #0c0a09;
+  --color-ink-light: #1c1917;
+  --color-cream: #faf7f2;
+  --color-cream-muted: #d6d0c4;
+  --color-gold: #c9a227;
+  --color-gold-muted: #a8841a;
+  --color-rose: #be123c;
+  --color-rose-light: #fb7185;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-cream antialiased;
+    font-family: var(--font-body);
+  }
+
+  ::selection {
+    @apply bg-gold/30 text-cream;
+  }
+}
+
+@layer components {
+  .prose-itsyou {
+    @apply text-lg leading-relaxed text-cream-muted;
+
+    & h2 {
+      @apply mt-16 mb-6 font-display text-3xl font-semibold tracking-tight text-cream md:text-4xl;
+      font-family: var(--font-display);
+    }
+
+    & h2:first-child {
+      @apply mt-0;
+    }
+
+    & h3 {
+      @apply mt-12 mb-4 font-display text-2xl font-semibold tracking-tight text-cream;
+      font-family: var(--font-display);
+    }
+
+    & p {
+      @apply mb-5;
+    }
+
+    & strong {
+      @apply font-semibold text-cream;
+    }
+
+    & em {
+      @apply text-gold not-italic;
+    }
+
+    & ul {
+      @apply my-6 space-y-3 pl-0 list-none;
+    }
+
+    & li {
+      @apply relative pl-6;
+    }
+
+    & li::before {
+      content: "";
+      @apply absolute left-0 top-[0.65em] h-1.5 w-1.5 rounded-full bg-gold;
+    }
+
+    & blockquote {
+      @apply my-8 border-l-2 border-gold/60 pl-6 italic text-cream/90;
+    }
+  }
+
+  .cta-button {
+    @apply inline-flex items-center gap-2 px-8 py-4 bg-gold text-ink font-sans font-semibold
+           rounded-lg transition-all duration-300 hover:bg-gold-muted hover:scale-[1.02]
+           active:scale-[0.98] shadow-lg shadow-gold/20;
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 3s ease-in-out infinite;
+}

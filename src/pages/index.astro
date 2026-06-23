@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroImage from '../components/HeroImage.astro';
+import QuoteBlock from '../components/QuoteBlock.astro';
+import Footer from '../components/Footer.astro';
+
+const siteCopy = await getCollection('siteCopy');
+const home = siteCopy.find((entry) => entry.id === 'home');
+
+const title = home?.data.title ?? 'itsyou.ooo — Only you can change you';
+const description = home?.data.description ?? 'A daily reminder of the Stoic boundary between what is up to you and what is not.';
+const sections = home?.data.sections ?? [];
+
+const email = 'sales@desertrich.com';
+---
+
+<BaseLayout title={title} description={description}>
+  <main class="mx-auto max-w-4xl px-6 py-12 md:py-20">
+    <!-- Hero Image with overlay -->
+    <section class="mb-16">
+      <HeroImage />
+    </section>
+
+    <!-- Content sections -->
+    <article class="prose-itsyou mx-auto max-w-3xl">
+      {
+        sections.map((section) => {
+          if (section.type === 'quote') {
+            return (
+              <QuoteBlock
+                content={section.content}
+                attribution={section.attribution}
+              />
+            );
+          }
+
+          if (section.type === 'cta') {
+            return (
+              <div class="my-16 text-center">
+                <a
+                  href={`mailto:${email}?subject=Acquisition Inquiry: itsyou.ooo`}
+                  class="cta-button text-lg"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  {section.content} → {email}
+                </a>
+              </div>
+            );
+          }
+
+          // prose or heading-only
+          return (
+            <section id={section.id}>
+              {section.heading && <h2>{section.heading}</h2>}
+              {section.content.split('\n\n').map((paragraph) => {
+                // Check for markdown-like bold and italic
+                const html = paragraph
+                  .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                  .replace(/\*(.+?)\*/g, '<em>$1</em>')
+                  .replace(/^-\s(.+)$/gm, '<li>$1</li>');
+
+                if (html.startsWith('<li>')) {
+                  const items = html.split('\n').filter(line => line.trim());
+                  return <ul set:html={items.join('')} />;
+                }
+
+                return <p set:html={html.replace(/\n/g, '<br />')} />;
+              })}
+            </section>
+          );
+        })
+      }
+    </article>
+
+    <!-- Mid-page CTA -->
+    <div class="mt-20 text-center">
+      <p class="font-display text-xl text-cream-muted mb-6">
+        Ready when you are.<br />The work, as always, remains yours.
+      </p>
+      <a
+        href={`mailto:${email}?subject=Acquisition Inquiry: itsyou.ooo`}
+        class="cta-button"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+        Inquire: {email}
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
